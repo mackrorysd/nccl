@@ -633,6 +633,7 @@ ncclResult_t ncclIbIsend(void* sendComm, void* data, int size, void* mhandle, vo
   struct ibv_mr* mr = (struct ibv_mr*)mhandle;
 
   // Wait for the receiver to have posted the corresponding receive
+  WARN("Getting slot: comm->fifo: %p comm->fifoHead: %d MAX_REQUESTS: %d", comm->fifo, comm->fifoHead, MAX_REQUESTS);
   volatile struct ncclIbSendFifo* slot = comm->fifo + (comm->fifoHead%MAX_REQUESTS);
   volatile uint32_t * readyPtr = &slot->ready;
   if (*readyPtr == 0) { *request = NULL; return ncclSuccess; }
